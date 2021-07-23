@@ -37,7 +37,7 @@ jobs:
         with:
           context: ./docker/php-base
           push: true
-          tags: ${{ steps.meta.outputs.tags }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/php-base:latest
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   build-and-push-php-image:
@@ -74,7 +74,7 @@ jobs:
           context: .
           file: ./docker/php/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/php:latest
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: BASE_PHP_IMAGE=${{ env.BASE_PHP_IMAGE }}
 
@@ -111,6 +111,6 @@ jobs:
         with:
           context: ./docker/nginx
           push: true
-          tags: ${{ steps.meta.outputs.tags }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/nginx:latest
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: ASSET_IMAGE=${{ env.ASSET_IMAGE }}
