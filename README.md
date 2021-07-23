@@ -23,13 +23,15 @@
 Build the docker image
 
 ```bash
-docker build -t <username>/<repository> ./docker
+docker build . -t <username>/<repository_php> -f ./docker/php/Dockerfile
+docker build . -t <username>/<repository_nginx> -f ./docker/nginx/Dockerfile --build-arg ASSET_IMAGE=<username>/<repository_php>
 ```
 
 Push the docker image
 
 ```
-docker push <username>/<repository>
+docker push <username>/<repository_php>
+docker push <username>/<repository_nginx>
 ```
 
 ## Helm
