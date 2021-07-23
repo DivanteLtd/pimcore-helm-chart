@@ -13,6 +13,8 @@ RUN mkdir -p /root/.composer
 
 COPY pimcore /var/www/pimcore/
 
+WORKDIR /var/www/pimcore
+
 RUN composer install \
     --prefer-dist \
     --no-progress \
