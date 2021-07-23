@@ -41,6 +41,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   build-and-push-nginx-image:
+    needs: [build-and-push-php-image]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -61,7 +62,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/php
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/nginx
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
