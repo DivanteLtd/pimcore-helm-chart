@@ -23,7 +23,8 @@
 Build the docker image
 
 ```bash
-docker build . -t <username>/<repository_php> -f ./docker/php/Dockerfile
+docker build . -t <username>/<repository_php_base> -f ./docker/php-base/Dockerfile
+docker build . -t <username>/<repository_php> -f ./docker/php/Dockerfile --build-arg BASE_PHP_IMAGE=<username>/<repository_php_base>
 docker build . -t <username>/<repository_nginx> -f ./docker/nginx/Dockerfile --build-arg ASSET_IMAGE=<username>/<repository_php>
 ```
 
