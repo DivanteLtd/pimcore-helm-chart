@@ -31,6 +31,7 @@ docker build . -t <username>/<repository_nginx> -f ./docker/nginx/Dockerfile --b
 Push the docker image
 
 ```
+docker push <username>/<repository_php_base>
 docker push <username>/<repository_php>
 docker push <username>/<repository_nginx>
 ```
