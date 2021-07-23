@@ -64,9 +64,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/nginx
 
-      - name: Set Asset Image name to lowercase
+      - name: Set Asset Image
         run: |
-          echo "ASSET_IMAGE=${REGISTRY}/${IMAGE_NAME,,}/php" >>${GITHUB_ENV}
+          echo "ASSET_IMAGE=${REGISTRY}/${IMAGE_NAME,,}/php:${GITHUB_REF##*/}" >>${GITHUB_ENV}
       
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -75,4 +75,4 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: ASSET_IMAGE=${{ env.ASSET_IMAGE }}:${{ env.GITHUB_REF##*/ }}
+          build-args: ASSET_IMAGE=${{ env.ASSET_IMAGE }}
