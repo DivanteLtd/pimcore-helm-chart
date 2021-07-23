@@ -64,6 +64,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/nginx
 
+      - name: Set Asset Image name to lowercase
+        run: |
+          echo ${{ env.REGISTRY }}
+          echo ${{ env.IMAGE_NAME }}
+      
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
