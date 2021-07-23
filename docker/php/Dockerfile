@@ -11,11 +11,7 @@ COPY --from=composer:2.1.4 /usr/bin/composer /usr/bin/composer
 
 RUN mkdir -p /root/.composer
 
-RUN pwd
-RUN ls -la
-RUN ls -la /
-
-COPY ../../pimcore/ /var/www/pimcore/
+COPY pimcore /var/www/pimcore/
 
 RUN composer install \
     --prefer-dist \
