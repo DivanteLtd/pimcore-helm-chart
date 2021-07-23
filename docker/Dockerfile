@@ -7,7 +7,7 @@ RUN apk add --update --no-cache \
 
 # todo add all missing packages
 
-COPY --from=harbor-1.divante.pl/proxy/library/composer:2.0.14 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.1.4 /usr/bin/composer /usr/bin/composer
 
 RUN mkdir -p /root/.composer
 
