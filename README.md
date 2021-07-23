@@ -6,17 +6,12 @@
 
 - [Pimcore Helm Chart](#pimcore-helm-chart)
 	- [Requirements](#requirements)
-	- [Pimcore](#pimcore)
 	- [Docker](#docker)
 	- [Helm](#helm)
 
 ## Requirements
 
 - [Docker](https://www.docker.com/)
-
-## Pimcore
-
-...
 
 ## Docker
 
