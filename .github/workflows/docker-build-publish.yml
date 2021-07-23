@@ -68,6 +68,8 @@ jobs:
         run: |
           echo ${{ env.REGISTRY }}
           echo ${{ env.IMAGE_NAME }}
+          echo "ASSET_IMAGE=${REGISTRY}/${IMAGE_NAME,,}/php" >>${GITHUB_ENV}
+          echo ${{ env.ASSET_IMAGE }}
       
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -76,4 +78,4 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: ASSET_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/php
+          build-args: ASSET_IMAGE=${{ env.ASSET_IMAGE }}
