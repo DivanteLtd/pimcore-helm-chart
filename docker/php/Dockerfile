@@ -2,7 +2,7 @@ ARG BASE_PHP_IMAGE
 
 FROM ${BASE_PHP_IMAGE} as build-code
 
-COPY . /var/www/pimcore/
+COPY pimcore /var/www/pimcore/
 
 RUN usermod -u 1000 www-data
 
