@@ -106,10 +106,10 @@ architecture: replication
 auth:
   ## @param auth.enabled Enable password authentication
   ##
-  enabled: true
+  enabled: false
   ## @param auth.sentinel Enable password authentication on sentinels too
   ##
-  sentinel: true
+  sentinel: false
   ## @param auth.password Redis(TM) password
   ## Defaults to a random 10-character alphanumeric string if not set
   ##
@@ -441,7 +441,7 @@ master:
 replica:
   ## @param replica.replicaCount Number of Redis(TM) replicas to deploy
   ##
-  replicaCount: 3
+  replicaCount: 1
   ## @param replica.configuration Configuration for Redis(TM) replicas nodes
   ## ref: https://redis.io/topics/config
   ##
