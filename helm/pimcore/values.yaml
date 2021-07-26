@@ -13,8 +13,15 @@ pimcore:
   tag: main
   appEnv: dev
   appSecret: ChangeMe123!
-  databseURL: mysql://pimcore:pimcore@mysql-mariadb.pimcore.svc.cluster.local:3306/app?serverVersion=5.7
+  databaseURL: mysql://pimcore:pimcore@mysql-mariadb.pimcore.svc.cluster.local:3306/app?serverVersion=5.7
   redisServer: redis-master.pimcore.svc.cluster.local
+
+  db:
+    name: pimcore
+    host: mysql-mariadb.pimcore.svc.cluster.local
+    port: 3306
+    username: pimcore
+    password: pimcore
 
 php:
   replicas: 1
