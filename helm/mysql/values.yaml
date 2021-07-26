@@ -100,7 +100,7 @@ auth:
   ## @param auth.replicationPassword MariaDB replication user password. Ignored if existing secret is provided
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-up-a-replication-cluster
   ##
-  replicationPassword: ""
+  replicationPassword: "pimcore"
   ## @param auth.existingSecret Use existing secret for password details (`auth.rootPassword`, `auth.password`, `auth.replicationPassword` will be ignored and picked up from this secret). The secret has to contain the keys `mariadb-root-password`, `mariadb-replication-password` and `mariadb-password`
   ##
   existingSecret:
