@@ -4,7 +4,7 @@ settings:
 
 helmRepos:
   bitnami: "https://charts.bitnami.com/bitnami"
-  nginx: "https://kubernetes.github.io/ingress-nginx"
+  nginx: "https://helm.nginx.com/stable"
 
 
 namespaces:
