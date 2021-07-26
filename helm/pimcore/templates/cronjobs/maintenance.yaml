@@ -26,7 +26,7 @@ spec:
             {{- include "pimcore.initContainers.wait-for-pimcore-installed" . | nindent 12 }}
           containers:
             - name: maintenance
-              image: "{{ .Values.imageCredentials.registry }}/php:{{ .Values.image.tag }}"
+              image: "{{ .Values.image.registry }}/php:{{ .Values.image.tag }}"
               command: ["/bin/sh", "-c"]
               args:
                 - >
