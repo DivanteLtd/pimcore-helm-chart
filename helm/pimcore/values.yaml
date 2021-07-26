@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   pullPolicy: Always
-  repository: ghcr.io/divanteltd/pimcore-helm-chart
+  registry: ghcr.io/divanteltd/pimcore-helm-chart
   tag: main
 
 imagePullSecrets: [ ]
