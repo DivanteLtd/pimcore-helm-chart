@@ -23,12 +23,7 @@ spec:
       serviceAccountName: {{ include "pimcore.serviceAccountName" . }}
       restartPolicy: Never
       initContainers:
-        - name: "wait-for-mysql"
-          image: busybox
-          imagePullPolicy: IfNotPresent
-          command: ['sh', '-c', 'until nslookup {{ .Values.pimcore.db.host }}; do echo waiting for mysql; sleep 2; done;']
-          securityContext:
-            privileged: false
+        {{- include "pimcore.initContainers.wait-for-mysql" . | nindent 12 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/php:{{ .Values.image.tag }}"
