@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "pimcore.fullname" . }}-phpfpm-pool-conf
+  labels:
+    {{- include "pimcore.labels" . | nindent 4 }}
+data:
+  php-pool-config.conf: |
+    [www]
+    user = www-data
+    group = www-data
+    listen = 0.0.0.0:9000
+    pm = dynamic
+    pm.start_servers = 3
+    pm.min_spare_servers = 2
+    pm.max_spare_servers = 4
+    pm.max_children = 50
+    pm.max_requests = 200
