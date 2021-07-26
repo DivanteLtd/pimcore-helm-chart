@@ -18,6 +18,7 @@ apps:
     chart: "bitnami/mariadb"
     version: 9.3.18
     valuesFile: "./mysql/values.yaml"
+    priority: -1
 
   redis:
     namespace: "pimcore"
@@ -25,6 +26,7 @@ apps:
     chart: "bitnami/redis"
     version: 14.8.3
     valuesFile: "./redis/values.yaml"
+    priority: -1
 
   nginx-ingress:
     namespace: "pimcore"
