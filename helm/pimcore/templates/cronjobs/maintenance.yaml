@@ -22,7 +22,6 @@ spec:
           {{- end }}
           restartPolicy: OnFailure
           initContainers:
-            {{- include "pimcore.initContainers.wait-for-mysql" . | nindent 12 }}
             {{- include "pimcore.initContainers.wait-for-pimcore-installed" . | nindent 12 }}
           containers:
             - name: maintenance
