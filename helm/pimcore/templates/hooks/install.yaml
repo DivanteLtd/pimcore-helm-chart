@@ -1,20 +1,20 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "pimcore.fullname" . }}-migrate
+  name: {{ include "pimcore.fullname" . }}-install
   labels:
     {{- include "pimcore.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "5"
-    "helm.sh/hook-delete-policy": hook-failed,hook-succeeded
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   template:
     metadata:
       name: "{{ .Release.Name }}"
       labels:
         app.kubernetes.io/name: {{ include "pimcore.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}-migrate
+        app.kubernetes.io/instance: {{ .Release.Name }}-install
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -36,11 +36,19 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "pimcore.fullname" . }}-dotenv
-          command: ["/bin/sh", "-c"]
-          args:
-            - >
-              ./bin/console doctrine:migrations:migrate --no-interaction &&
-              ./bin/console assets:install
+          command: ["vendor/bin/pimcore-install",
+              "--ignore-existing-config",
+              {{ with .Values.pimcore }}
+              "--admin-username={{ .username }}",
+              "--admin-password={{ .password }}",
+              {{- end }}
+              {{ with .Values.pimcore.db }}
+              "--mysql-host-socket={{ .host }}",
+              "--mysql-database={{ .name }}",
+              "--mysql-username={{ .username }}",
+              "--mysql-password={{ .password }}",
+              {{- end }}
+              "--no-interaction"]
           volumeMounts:
             - name: php-ini
               mountPath: /usr/local/etc/php/php.ini

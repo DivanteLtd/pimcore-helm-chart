@@ -1,0 +1,61 @@
+{{- $fullName := include "pimcore.fullname" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pimcore.fullname" . }}-nginx
+  labels:
+    {{- include "pimcore.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.nginx.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "pimcore.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}-nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "pimcore.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}-nginx
+      annotations:
+        checksum/serverblock: {{ include (print $.Template.BasePath "/nginx/configmap/serverblock.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "pimcore.serviceAccountName" . }}
+      containers:
+        - name: nginx
+          image: "{{ .Values.imageCredentials.registry }}/nginx:{{ .Values.pimcore.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+              - mountPath: /etc/nginx/conf.d
+                name: server-block
+              {{- range .Values.nginx.sharedFolders }}
+              - name: data-{{ $fullName }}-data
+                mountPath: /var/www/pimcore/{{ . }}
+                subPath: {{ . }}
+              {{- end }}
+      volumes:
+        - name: server-block
+          configMap:
+              name: {{ include "pimcore.fullname" . }}-nginx-server-block
+        - name: data-{{ $fullName }}-data
+          persistentVolumeClaim:
+              claimName: data-{{ $fullName }}-data
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

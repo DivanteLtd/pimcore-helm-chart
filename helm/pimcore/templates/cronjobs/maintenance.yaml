@@ -1,0 +1,78 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "pimcore.fullname" . }}-maintenance
+  labels:
+    {{- include "pimcore.labels" . | nindent 4 }}
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 60
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ include "pimcore.name" . }}
+            app.kubernetes.io/instance: {{ .Release.Name }}-maintenance
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: OnFailure
+          initContainers:
+            {{- include "pimcore.initContainers.wait-for-mysql" . | nindent 12 }}
+            {{- include "pimcore.initContainers.wait-for-pimcore-installed" . | nindent 12 }}
+          containers:
+            - name: maintenance
+              image: "{{ .Values.imageCredentials.registry }}/php:{{ .Values.image.tag }}"
+              command: ["/bin/sh", "-c"]
+              args:
+                - >
+                  ./bin/console maintenance
+              resources:
+              {{- toYaml .Values.resources.maintenance | nindent 16 }}
+              envFrom:
+              - secretRef:
+                  name: {{ include "pimcore.fullname" . }}-dotenv
+              volumeMounts:
+                - name: php-ini
+                  mountPath: /usr/local/etc/php/php.ini
+                  subPath: php.ini
+                - name: php-config
+                  mountPath: /usr/local/etc/php-fpm.conf
+                  subPath: php-config.conf
+                - name: php-pool-config
+                  mountPath: /usr/local/etc/php-fpm.d/zz-www.conf
+                  subPath: php-pool-config.conf
+                {{- range .Values.pimcore.sharedFolders }}
+                - name: pimcore-data
+                  mountPath: /var/www/pimcore/{{ . }}
+                  subPath: {{ . }}
+                {{- end }}
+          volumes:
+            - name: pimcore-data
+              persistentVolumeClaim:
+                claimName: {{ template "pimcore.fullname" . }}-data
+            - name: php-ini
+              configMap:
+                  name: {{ template "pimcore.fullname" . }}-phpfpm-ini
+            - name: php-config
+              configMap:
+                  name: {{ template "pimcore.fullname" . }}-phpfpm-conf
+            - name: php-pool-config
+              configMap:
+                  name: {{ template "pimcore.fullname" . }}-phpfpm-pool-conf
+          {{- with .Values.nodeSelector.maintenance }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+        {{- with .Values.affinity.maintenance }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.tolerations.maintenance }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+        {{- end }}
