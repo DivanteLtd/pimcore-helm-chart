@@ -2,6 +2,8 @@ replicaCount: 1
 
 image:
   pullPolicy: Always
+  repository: ghcr.io/divanteltd/pimcore-helm-chart
+  tag: main
 
 imagePullSecrets: [ ]
 nameOverride: ""
@@ -12,9 +14,7 @@ pimcore:
   appEnv: dev
   appSecret: ChangeMe123!
   databseURL: mysql://pimcore:pimcore@mysql-mariadb.pimcore.svc.cluster.local:3306/app?serverVersion=5.7
-  redisHost: redis-master.pimcore.svc.cluster.local
-  redisPort: '6379'
-  redisPassword: password
+  redisServer: redis-master.pimcore.svc.cluster.local
 
 php:
   replicas: 1

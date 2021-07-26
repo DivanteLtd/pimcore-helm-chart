@@ -32,9 +32,9 @@ apps:
     chart: "nginx/nginx-ingress"
     version: 0.6.1
 
-  # pimcore:
-  #   namespace: "pimcore"
-  #   enabled: true
-  #   chart: "./pimcore"
-  #   version: 0.1.0
-  #   valuesFile: "./pimcore/values.yaml"
+  pimcore:
+    namespace: "pimcore"
+    enabled: true
+    chart: "./pimcore"
+    version: 0.1.0
+    valuesFile: "./pimcore/values.yaml"
