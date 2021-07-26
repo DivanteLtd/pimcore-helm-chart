@@ -1,0 +1,118 @@
+replicaCount: 1
+
+image:
+  pullPolicy: Always
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: ""
+
+pimcore:
+  tag: main
+  appEnv: dev
+  appSecret: ChangeMe123!
+  databseURL: mysql://pimcore:pimcore@mysql.pimcore.svc.cluster.local:3306/app?serverVersion=5.7
+  redisHost: redis-master.pimcore.svc.cluster.local
+  redisPort: '6379'
+  redisPassword: password
+
+php:
+  replicas: 1
+  service:
+    type: ClusterIP
+    port: 9000
+  sharedFolders:
+    - app/config/local
+    - config/local
+    - public/var
+    - public/bundles
+    - var/admin
+    - var/application-logger
+    - var/bundles
+    - var/cache
+    - var/classes
+    - var/config
+    - var/email
+    - var/log
+    - var/logs
+    - var/recyclebin
+    - var/sessions
+    - var/tmp
+    - var/versions
+
+nginx:
+  replicas: 1
+  tag: master
+  service:
+    type: ClusterIP
+    port: 80
+  resources:
+    requests:
+      cpu: 10m
+      memory: 8Mi
+      ephemeral-storage: 256Mi
+      limits:
+        cpu: 50m
+        memory: 32Mi
+        ephemeral-storage: 256Mi
+  svc:
+    type: ClusterIP
+  tls:
+    enabled: false
+  maxBodySize: 100m
+  sharedFolders:
+    - public/var
+    - public/bundles
+
+install:
+  resources: [ ]
+
+pvc:
+  - data:
+    name: data
+    storage: 10Gi
+    accessMode: ReadWriteOnce
+
+serviceAccount:
+  create: true
+  annotations: { }
+  name: ""
+
+podAnnotations: { }
+
+podSecurityContext: { }
+
+securityContext: { }
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  hosts:
+    - host: pimcore-local.com
+      paths: [ "/" ]
+  tls:
+    - secretName: pimcore-local.com-tls
+      hosts:
+        - pimcore-local.com
+
+resources: { }
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: { }
+
+tolerations: [ ]
+
+affinity: { }

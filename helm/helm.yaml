@@ -8,34 +8,36 @@ helmRepos:
 
 
 namespaces:
-  blackroll:
+  pimcore:
     protected: false
-  # monitoring:
-  #   protected: false
 
 apps:
   mysql:
-    namespace: "blackroll"
+    namespace: "pimcore"
     enabled: true
     chart: "bitnami/mariadb"
     version: 7.10.3
     valuesFile: "./mysql/values.yaml"
     priority: -1
 
+  redis:
+    namespace: "pimcore"
+    enabled: true
+    enabled: true
+    chart: "bitnami/mariadb"
+    version: 11.1.1
+    valuesFile: "./redis/values.yaml"
+    priority: -1
+
   nginx-ingress:
-    namespace: "blackroll"
+    namespace: "pimcore"
     enabled: true
     chart: "nginx/nginx-ingress"
     version: 0.6.1
 
   pimcore:
-    namespace: "blackroll"
+    namespace: "pimcore"
     enabled: true
     chart: "./pimcore"
     version: 0.1.0
     valuesFile: "./pimcore/values.yaml"
-    set:
-      imageCredentials.username: ${REGISTRY_USERNAME}
-      imageCredentials.password: ${REGISTRY_PASSWORD}
-
-
