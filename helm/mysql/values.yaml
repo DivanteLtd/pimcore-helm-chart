@@ -131,7 +131,7 @@ replication:
   ## Enable replication. This enables the creation of replicas of MariaDB. If false, only a
   ## master deployment would be created
   ##
-  enabled: true
+  enabled: false
   ## MariaDB replication user
   ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-up-a-replication-cluster
   ##
@@ -254,12 +254,15 @@ master:
     port=3306
     socket=/opt/bitnami/mariadb/tmp/mysql.sock
     tmpdir=/opt/bitnami/mariadb/tmp
-    max_allowed_packet=16M
+    max_allowed_packet=256M
     bind-address=0.0.0.0
     pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
     log-error=/opt/bitnami/mariadb/logs/mysqld.log
     character-set-server=utf8mb4
     collation-server=utf8mb4_unicode_ci
+    innodb_file_format = Barracuda
+    innodb_large_prefix = 1
+    innodb_file_per_table = 1
 
     [client]
     port=3306
