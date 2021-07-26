@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pimcore.fullname" . }}-php
+  labels:
+    {{- include "pimcore.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.php.service.type }}
+  ports:
+    - port: 9000
+      targetPort: 9000
+  selector:
+    app.kubernetes.io/name: {{ include "pimcore.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-php
