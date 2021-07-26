@@ -128,8 +128,8 @@ autoscaling:
 nodeSelector: { }
 
 tolerations:
-  nginx: []
-  php: []
-  maintenance: []
+  nginx:
+  php:
+  maintenance:
 
 affinity: { }
