@@ -1,0 +1,19 @@
+{{- $fullName := include "pimcore.fullname" . }}
+  {{- range .Values.pvc }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-{{ $fullName }}-{{ .name }}
+  labels:
+    {{- include "pimcore.labels" $ | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .accessMode }}
+  {{- if .storageClass }}
+  storageClassName: {{ .storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .storage }}
+---
+{{- end }}
