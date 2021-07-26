@@ -1,0 +1,41 @@
+settings:
+  kubeContext: "minikube"
+  globalMaxHistory: 5
+
+helmRepos:
+  bitnami: "https://charts.bitnami.com/bitnami"
+  nginx: "https://kubernetes.github.io/ingress-nginx"
+
+
+namespaces:
+  blackroll:
+    protected: false
+  # monitoring:
+  #   protected: false
+
+apps:
+  mysql:
+    namespace: "blackroll"
+    enabled: true
+    chart: "bitnami/mariadb"
+    version: 7.10.3
+    valuesFile: "./mysql/values.yaml"
+    priority: -1
+
+  nginx-ingress:
+    namespace: "blackroll"
+    enabled: true
+    chart: "nginx/nginx-ingress"
+    version: 0.6.1
+
+  pimcore:
+    namespace: "blackroll"
+    enabled: true
+    chart: "./pimcore"
+    version: 0.1.0
+    valuesFile: "./pimcore/values.yaml"
+    set:
+      imageCredentials.username: ${REGISTRY_USERNAME}
+      imageCredentials.password: ${REGISTRY_PASSWORD}
+
+
