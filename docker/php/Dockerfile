@@ -1,34 +1,27 @@
-FROM php:8.0.8-fpm-alpine3.14
+ARG BASE_PHP_IMAGE
 
-RUN apk add --update --no-cache \
-    graphviz \
-    shadow \
-    ffmpeg
+FROM ${BASE_PHP_IMAGE} as build-code
 
-# todo add all missing packages
+COPY pimcore /var/www/pimcore/
 
-COPY --from=composer:2.1.4 /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www/pimcore
 
-RUN mkdir -p /root/.composer
+RUN composer install \
+    --prefer-dist \
+    --no-progress \
+    --no-suggest \
+    --no-interaction \
+    --no-scripts
 
-# COPY . /var/www/pimcore/
+RUN composer dump-autoload
 
-# RUN composer install \
-#     --prefer-dist \
-#     --no-progress \
-#     --no-suggest \
-#     --no-interaction \
-#     --no-scripts
+RUN rm -rf \
+    .gitlab \
+    dev \
+    var/cache \
+    var/logs
 
-# RUN composer dump-autoload
-
-# RUN rm -rf \
-#     .gitlab \
-#     dev \
-#     var/cache \
-#     var/logs
-
-# RUN touch .env
+RUN touch .env
 
 RUN usermod -u 1000 www-data
 USER www-data
