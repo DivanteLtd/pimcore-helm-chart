@@ -31,7 +31,7 @@ spec:
             privileged: false
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.imageCredentials.registry }}/pimcore-php:{{ .Values.image.tag }}"
+          image: "{{ .Values.imageCredentials.registry }}/php:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
             - secretRef:
