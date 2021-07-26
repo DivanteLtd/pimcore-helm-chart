@@ -11,7 +11,7 @@ pimcore:
   tag: main
   appEnv: dev
   appSecret: ChangeMe123!
-  databseURL: mysql://pimcore:pimcore@mysql.pimcore.svc.cluster.local:3306/app?serverVersion=5.7
+  databseURL: mysql://pimcore:pimcore@mysql-mariadb.pimcore.svc.cluster.local:3306/app?serverVersion=5.7
   redisHost: redis-master.pimcore.svc.cluster.local
   redisPort: '6379'
   redisPassword: password
