@@ -104,7 +104,14 @@ ingress:
     nginx.ingress.kubernetes.io/use-regex: "true"
   hosts:
     - host: pimcore-local.com
-      paths: [ "/" ]
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: pimcore
+              port:
+                number: 80
   tls:
     - secretName: pimcore-local.com-tls
       hosts:
