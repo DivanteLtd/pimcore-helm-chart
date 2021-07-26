@@ -1,0 +1,85 @@
+{{- $fullName := include "pimcore.fullname" . }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pimcore.fullname" . }}-php
+  labels:
+    {{- include "pimcore.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.php.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "pimcore.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}-php
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "pimcore.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}-php
+      annotations:
+        checksum/secret-env-vars: {{ include (print $.Template.BasePath "/secret/dotenv.yaml") . | sha256sum }}
+        checksum/phpfpmconf: {{ include (print $.Template.BasePath "/php/configmap/phpfpmconf.yaml") . | sha256sum }}
+        checksum/phpini: {{ include (print $.Template.BasePath "/php/configmap/phpini.yaml") . | sha256sum }}
+        checksum/phppool: {{ include (print $.Template.BasePath "/php/configmap/phppool.yaml") . | sha256sum }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "pimcore.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.imageCredentials.registry }}/php:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 9000
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          envFrom:
+          - secretRef:
+                name: {{ include "pimcore.fullname" . }}-dotenv
+          volumeMounts:
+              - name: php-ini
+                mountPath: /usr/local/etc/php/php.ini
+                subPath: php.ini
+              - name: php-config
+                mountPath: /usr/local/etc/php-fpm.conf
+                subPath: php-config.conf
+              - name: php-pool-config
+                mountPath: /usr/local/etc/php-fpm.d/www.conf
+                subPath: php-pool-config.conf
+              {{- range .Values.php.sharedFolders }}
+              - name: data-{{ $fullName }}-data
+                mountPath: /var/www/app/{{ . }}
+                subPath: {{ . }}
+              {{- end }}
+      volumes:
+          - name: data-{{ $fullName }}-data
+            persistentVolumeClaim:
+                claimName: data-{{ $fullName }}-data
+          - name: php-ini
+            configMap:
+                name: {{ template "pimcore.fullname" . }}-phpfpm-ini
+          - name: php-config
+            configMap:
+                name: {{ template "pimcore.fullname" . }}-phpfpm-conf
+          - name: php-pool-config
+            configMap:
+                name: {{ template "pimcore.fullname" . }}-phpfpm-pool-conf
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+
