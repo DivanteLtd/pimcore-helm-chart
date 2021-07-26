@@ -18,9 +18,9 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}-php
       annotations:
         checksum/secret-env-vars: {{ include (print $.Template.BasePath "/secret/dotenv.yaml") . | sha256sum }}
-        checksum/phpfpmconf: {{ include (print $.Template.BasePath "/php/configmap/phpfpmconf.yaml") . | sha256sum }}
+        checksum/phpfpmconf: { { include (print $.Template.BasePath "/www/configmap/phpfpmconf.yaml") . | sha256sum } }
         checksum/phpini: {{ include (print $.Template.BasePath "/php/configmap/phpini.yaml") . | sha256sum }}
-        checksum/phppool: {{ include (print $.Template.BasePath "/php/configmap/phppool.yaml") . | sha256sum }}
+        checksum/phppool: { { include (print $.Template.BasePath "/www/configmap/phppool.yaml") . | sha256sum } }
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
