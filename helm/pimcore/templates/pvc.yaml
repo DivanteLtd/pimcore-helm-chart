@@ -8,7 +8,7 @@ metadata:
     {{- include "pimcore.labels" $ | nindent 4 }}
 spec:
   accessModes:
-    - {{ .accessMode }}
+    - {{ .accessMode | quote }}
   {{- if .storageClass }}
   storageClassName: {{ .storageClass }}
   {{- end }}

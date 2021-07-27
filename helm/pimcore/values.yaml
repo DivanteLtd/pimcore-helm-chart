@@ -40,6 +40,7 @@ php:
     - var/classes
     - var/config
     - var/email
+    - var/installer
     - var/log
     - var/logs
     - var/recyclebin
