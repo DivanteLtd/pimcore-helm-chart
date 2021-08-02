@@ -23,6 +23,8 @@ RUN rm -rf \
 
 RUN touch .env
 
+FROM ${BASE_PHP_IMAGE}
+
 RUN usermod -u 1000 www-data
 
 COPY --from=build-code --chown=www-data /var/www/pimcore /var/www/pimcore
