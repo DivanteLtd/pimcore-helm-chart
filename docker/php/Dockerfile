@@ -24,6 +24,9 @@ RUN rm -rf \
 RUN touch .env
 
 RUN usermod -u 1000 www-data
+
+COPY --from=build-code --chown=www-data /var/www/pimcore /var/www/pimcore
+
 USER www-data
 
 WORKDIR /var/www/pimcore
