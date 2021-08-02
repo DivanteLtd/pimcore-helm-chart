@@ -32,6 +32,7 @@ php:
     type: ClusterIP
     port: 9000
   sharedFolders:
+    - config/local
     - public/var
     - public/bundles
     - var/admin
