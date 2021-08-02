@@ -124,6 +124,6 @@ Create the name of the service account to use
     mountPath: /var/www/pimcore/var/application-logger
     subPath: var/application-logger
   - name: pimcore-data
-    mountPath: /var/www/pimcore/app/config/local
-    subPath: app/config/local
+    mountPath: /var/www/pimcore/config/local
+    subPath: config/local
 {{- end -}}

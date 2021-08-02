@@ -16,6 +16,9 @@ pimcore:
   databaseURL: mysql://pimcore:pimcore@mysql-mariadb.pimcore.svc.cluster.local:3306/app?serverVersion=5.7
   redisServer: redis-master.pimcore.svc.cluster.local
 
+  username: admin
+  password: admin
+
   db:
     name: pimcore
     host: mysql-mariadb.pimcore.svc.cluster.local
@@ -29,8 +32,6 @@ php:
     type: ClusterIP
     port: 9000
   sharedFolders:
-    - app/config/local
-    - config/local
     - public/var
     - public/bundles
     - var/admin

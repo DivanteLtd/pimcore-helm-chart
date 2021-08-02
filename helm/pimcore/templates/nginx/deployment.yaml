@@ -36,7 +36,7 @@ spec:
               - mountPath: /etc/nginx/conf.d
                 name: server-block
               {{- range .Values.nginx.sharedFolders }}
-              - name: data-{{ $fullName }}-data
+              - name: pimcore-data
                 mountPath: /var/www/pimcore/{{ . }}
                 subPath: {{ . }}
               {{- end }}
@@ -44,9 +44,9 @@ spec:
         - name: server-block
           configMap:
               name: {{ include "pimcore.fullname" . }}-nginx-server-block
-        - name: data-{{ $fullName }}-data
+        - name: pimcore-data
           persistentVolumeClaim:
-              claimName: data-{{ $fullName }}-data
+              claimName: pimcore-data
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

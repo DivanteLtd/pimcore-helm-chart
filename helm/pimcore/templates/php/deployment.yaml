@@ -52,15 +52,21 @@ spec:
               - name: php-pool-config
                 mountPath: /usr/local/etc/php-fpm.d/www.conf
                 subPath: php-pool-config.conf
+              - name: doctrine-config
+                mountPath: /var/www/pimcore/config/local
+                subPath: database.yaml
               {{- range .Values.php.sharedFolders }}
-              - name: data-{{ $fullName }}-data
+              - name: pimcore-data
                 mountPath: /var/www/app/{{ . }}
                 subPath: {{ . }}
               {{- end }}
       volumes:
-          - name: data-{{ $fullName }}-data
+          - name: pimcore-data
             persistentVolumeClaim:
-                claimName: data-{{ $fullName }}-data
+                claimName: pimcore-data
+          - name: doctrine-config
+            configMap:
+                name: {{ template "pimcore.fullname" . }}-doctrine-config
           - name: php-ini
             configMap:
                 name: {{ template "pimcore.fullname" . }}-phpfpm-ini
