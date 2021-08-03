@@ -24,6 +24,7 @@ spec:
       restartPolicy: Never
       initContainers:
         {{- include "pimcore.initContainers.wait-for-mysql" . | nindent 12 }}
+        {{- include "pimcore.initContainers.wait-for-pimcore-installed" . | nindent 12 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/php:{{ .Values.image.tag }}"
